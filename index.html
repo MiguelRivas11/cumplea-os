@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎉 ¡Feliz Cumpleaños! 🎉</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="fondo-animado"></div>
+
+  <!-- AUDIO DE FONDO -->
+  <audio id="bgAudio" src="Pink Floyd - Comfortably Numb (Lyrics).mp3" loop preload="auto"></audio>
+
+  <!-- CONTROL DE AUDIO (se muestra si autoplay falla o para controlar manualmente) -->
+  <div id="audioControl" class="audio-control" title="Reproducir / Pausar">
+    <svg id="audioIcon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 9v6h4l5 4V5l-5 4H6z" />
+    </svg>
+  </div>
+
+  <!-- BENGALAS -->
+  <div class="bengala left" id="b1"></div>
+  <div class="bengala right" id="b2"></div>
+
+  <!-- PANTALLA 1: INICIO -->
+  <div id="p1" class="pantalla activa">
+    <h1>🎉 ¡FELIZ CUMPLEAÑOS! 🎂</h1>
+    <h2>Hoy es tu día especial</h2>
+    <p>Prepárate ponte tus audifonos para mejor experiencia</p>
+    <button onclick="siguiente(1)">🚀 ¡Vamos!</button>
+    <div class="progreso">
+      <div class="progreso-barra" style="width: 20%;"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 2: MENSAJE 1 -->
+  <div id="p2" class="pantalla">
+    <h1>✨ ¡Qué alegría! ✨</h1>
+    <h2>Que este día esté lleno de sonrisas y momentos inolvidables</h2>
+    <p>Un año más, mil historias más por crear</p>
+    <div class="video-container">
+      <video id="video1" src="guitarra.mp4" loop muted playsinline preload="auto" poster="https://via.placeholder.com/480x270?text=Guitarra">
+        Tu navegador no soporta el elemento <code>video</code>.
+      </video>
+    </div>
+    <button onclick="siguiente(2)">Siguiente →</button>
+    <div class="progreso">
+      <div class="progreso-barra" style="width: 40%;"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 3: MENSAJE 2 -->
+  <div id="p3" class="pantalla">
+    <h1>💫 ¡Eres Increíble! eres la mejor persona y el mejor papa💫</h1>
+    <h2>Aún quedan muchos caminos por recorrer</h2>
+    <p>Lo mejor de tu historia todavía se está escribiendo</p>
+    <div class="video-container">
+      <video id="video2" src="rodada.mp4" loop muted playsinline preload="auto" poster="https://via.placeholder.com/480x270?text=Rodada">
+        Tu navegador no soporta el elemento <code>video</code>.
+      </video>
+    </div>
+    <button onclick="siguiente(3)">Siguiente →</button>
+    <div class="progreso">
+      <div class="progreso-barra" style="width: 60%;"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 4: MENSAJE 3 -->
+  <div id="p4" class="pantalla">
+    <h1>✈️ Nunca es tarde para empezar algo nuevo ✈️</h1>
+    <h2>Celebramos todo lo que has logrado y estas por lograr más</h2>
+    <p>Cada año es una nueva oportunidad para brillar, recuerda aun no eres quien vas a llegar a ser</p>
+    <div class="video-container">
+      <video id="video3" src="salto.mp4" loop muted playsinline preload="auto" poster="https://via.placeholder.com/480x270?text=Salto">
+        Tu navegador no soporta el elemento <code>video</code>.
+      </video>
+    </div>
+    <button onclick="siguiente(4)">Siguiente →</button>
+    <div class="progreso">
+      <div class="progreso-barra" style="width: 80%;"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA 5: FINAL CON FOTO -->
+  <div id="p5" class="pantalla">
+    <h1>🎉 ¡Que Disfrutes tu Día! 🎉</h1>
+    <h2>Después de tanto camino, ahora toca disfrutarlo</h2>
+    <p>Hoy es buen momento para hacer lo que siempre quisiste, Todo lo vivido te ha traído hasta aquí… y vale la pena,Has hecho mucho con lo que tenías, y eso es admirable.</p>
+    <div class="imagen-container">
+      <img src="selfie.png" alt="Selfie de cumpleaños" onerror="this.src='https://via.placeholder.com/350x350?text=Selfie'; this.onerror=null;">
+    </div>
+    <p style="margin-top: 30px; font-size: 1.2em;">¡A disfrutar y hacer recuerdos! 🌟</p>
+    <button onclick="reiniciar()">🔄 Volver al inicio</button>
+    <div class="progreso">
+      <div class="progreso-barra" style="width: 100%;"></div>
+    </div>
+  </div>
+
+  <script>
+    // NAVEGACIÓN ENTRE PANTALLAS
+    function siguiente(num) {
+      const pantallaActual = document.getElementById('p' + num);
+      const pantallaSiguiente = document.getElementById('p' + (num + 1));
+      
+      if (pantallaActual && pantallaSiguiente) {
+          pantallaActual.classList.remove('activa');
+          pantallaSiguiente.classList.add('activa');
+
+          // Reproducir/pausar videos en las pantallas
+          try {
+            const v1 = document.getElementById('video1');
+            const v2 = document.getElementById('video2');
+            const v3 = document.getElementById('video3');
+
+            // Video1 (p2): reproducir cuando la pantalla mostrada sea p2
+            if (v1) {
+              if ((num + 1) === 2) {
+                v1.muted = true;
+                v1.currentTime = 0;
+                const p = v1.play(); if (p && typeof p.catch === 'function') p.catch(()=>{});
+              }
+              if (num === 2) { v1.pause(); v1.currentTime = 0; }
+            }
+
+            // Video2 (p3): reproducir cuando la pantalla mostrada sea p3
+            if (v2) {
+              if ((num + 1) === 3) {
+                v2.muted = true;
+                v2.currentTime = 0;
+                const p2 = v2.play(); if (p2 && typeof p2.catch === 'function') p2.catch(()=>{});
+              }
+              if (num === 3) { v2.pause(); v2.currentTime = 0; }
+            }
+
+            // Video3 (p4): reproducir cuando la pantalla mostrada sea p4
+            if (v3) {
+              if ((num + 1) === 4) {
+                v3.muted = true;
+                v3.currentTime = 0;
+                const p3 = v3.play(); if (p3 && typeof p3.catch === 'function') p3.catch(()=>{});
+              }
+              if (num === 4) { v3.pause(); v3.currentTime = 0; }
+            }
+          } catch (e) { /* ignore */ }
+
+          // Activar efectos en la pantalla nueva
+          if (num + 1 === 5) {
+            lanzarConfeti();
+          }
+        }
+    }
+
+    function reiniciar() {
+      document.querySelectorAll('.pantalla').forEach(p => p.classList.remove('activa'));
+      document.getElementById('p1').classList.add('activa');
+    }
+
+    // GENERADOR DE CHISPAS PARA BENGALAS
+    function crearChispas(id) {
+      const contenedor = document.getElementById(id);
+      setInterval(() => {
+        const chispa = document.createElement('div');
+        chispa.className = 'chispa';
+        chispa.style.left = (Math.random() * 10 - 5) + 'px';
+        chispa.style.animationDuration = (Math.random() * 1 + 0.8) + 's';
+        contenedor.appendChild(chispa);
+        setTimeout(() => chispa.remove(), 1500);
+      }, 80);
+    }
+
+    // GENERADOR DE CONFETI
+    function lanzarConfeti() {
+      const colores = ['#ff4d6d', '#ff6b9d', '#4682ff', '#00d4ff', '#ffd700', '#00ff88'];
+      const cantidad = 100;
+
+      for (let i = 0; i < cantidad; i++) {
+        const confeti = document.createElement('div');
+        confeti.className = 'confeti';
+        confeti.style.left = Math.random() * 100 + 'vw';
+        confeti.style.top = '-10px';
+        confeti.style.background = colores[Math.floor(Math.random() * colores.length)];
+        confeti.style.animation = `caerConfeti ${Math.random() * 2 + 2}s ease-in forwards`;
+        
+        const delay = Math.random() * 0.5;
+        confeti.style.animationDelay = delay + 's';
+        
+        document.body.appendChild(confeti);
+        setTimeout(() => confeti.remove(), 3000);
+      }
+    }
+
+    // ANIMACIÓN CONFETI
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes caerConfeti {
+        to {
+          transform: translateY(100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // GENERADOR DE GLOBOS
+    function crearGlobos() {
+      const colores = ['#ff4d6d', '#ff6b9d', '#4682ff', '#00d4ff', '#ffd700'];
+      for (let i = 0; i < 3; i++) {
+        const globo = document.createElement('div');
+        globo.className = 'globo';
+        globo.style.background = colores[Math.floor(Math.random() * colores.length)];
+        globo.style.left = Math.random() * 90 + 5 + '%';
+        globo.style.animationDelay = Math.random() * 2 + 's';
+        document.body.appendChild(globo);
+      }
+    }
+
+    // INICIALIZACIÓN
+    window.addEventListener('load', () => {
+      crearChispas('b1');
+      crearChispas('b2');
+      crearGlobos();
+      initBackgroundAudio();
+    });
+
+    // SOPORTE PARA TECLA ENTER Y ESPACIO
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const pantalla = document.querySelector('.pantalla.activa');
+        const boton = pantalla.querySelector('button');
+        if (boton) boton.click();
+      }
+    });
+
+    // AUDIO DE FONDO: intento de autoplay y control
+    function initBackgroundAudio() {
+      const audio = document.getElementById('bgAudio');
+      const ctrl = document.getElementById('audioControl');
+      const icon = document.getElementById('audioIcon');
+      if (!audio || !ctrl || !icon) return;
+
+      audio.volume = 0.35;
+      audio.loop = true;
+
+      // Actualiza el icono según estado
+      function setPlaying(flag) {
+        if (flag) {
+          icon.innerHTML = '<path d="M6 6h4v12H6zM14 6h4v12h-4z"/>';
+          ctrl.title = 'Pausar música';
+        } else {
+          icon.innerHTML = '<path d="M6 9v6h4l5 4V5l-5 4H6z"/>';
+          ctrl.title = 'Reproducir música';
+        }
+      }
+
+      // Intentar reproducir al cargar
+      try {
+        const p = audio.play();
+        if (p && typeof p.then === 'function') {
+          p.then(() => { setPlaying(true); })
+           .catch(() => { setPlaying(false); /* usuario debe clicar */ });
+        } else {
+          setPlaying(!audio.paused);
+        }
+      } catch (e) {
+        setPlaying(false);
+      }
+
+      // Toggle reproducir/pausar al clicar el control
+      ctrl.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (audio.paused) {
+          audio.play().then(()=> setPlaying(true)).catch(()=> setPlaying(false));
+        } else {
+          audio.pause();
+          setPlaying(false);
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
