@@ -11,7 +11,7 @@
   <div class="fondo-animado"></div>
 
   <!-- AUDIO DE FONDO -->
-  <audio id="bgAudio" src="Pink Floyd - Comfortably Numb (Lyrics).mp3" loop preload="auto"></audio>
+  <audio id="bgAudio" src="Pink Floyd - Comfortably Numb (Lyrics).mp3" loop preload="auto" autoplay></audio>
 
   <!-- CONTROL DE AUDIO (se muestra si autoplay falla o para controlar manualmente) -->
   <div id="audioControl" class="audio-control" title="Reproducir / Pausar">
@@ -28,7 +28,8 @@
   <div id="p1" class="pantalla activa">
     <h1>🎉 ¡FELIZ CUMPLEAÑOS! 🎂</h1>
     <h2>Hoy es tu día especial</h2>
-    <p>Prepárate ponte tus audifonos para mejor experiencia</p>
+    <p>Prepárate ponte tus audifonos para mejor experiencia \n da click en la bocina inferior derecha</p>
+    <p class="audio-tip">Si la música no arranca sola, toca la pantalla una vez.</p>
     <button onclick="siguiente(1)">🚀 ¡Vamos!</button>
     <div class="progreso">
       <div class="progreso-barra" style="width: 20%;"></div>
@@ -254,18 +255,40 @@
         }
       }
 
-      // Intentar reproducir al cargar
-      try {
-        const p = audio.play();
-        if (p && typeof p.then === 'function') {
-          p.then(() => { setPlaying(true); })
-           .catch(() => { setPlaying(false); /* usuario debe clicar */ });
-        } else {
-          setPlaying(!audio.paused);
+      let audioUnlocked = false;
+
+      function tryStartAudio() {
+        try {
+          const attempt = audio.play();
+          if (attempt && typeof attempt.then === 'function') {
+            attempt.then(() => {
+              audioUnlocked = true;
+              setPlaying(true);
+            }).catch(() => {
+              setPlaying(false);
+            });
+          } else {
+            audioUnlocked = !audio.paused;
+            setPlaying(!audio.paused);
+          }
+        } catch (e) {
+          setPlaying(false);
         }
-      } catch (e) {
-        setPlaying(false);
       }
+
+      // Intentar reproducir al cargar y en cuanto el documento quede visible.
+      tryStartAudio();
+      window.addEventListener('pageshow', tryStartAudio, { once: true });
+
+      // Primer gesto del usuario desbloquea el audio si el navegador lo bloqueó.
+      const unlockEvents = ['pointerdown', 'touchstart', 'click', 'keydown'];
+      const unlockAudio = () => {
+        if (audioUnlocked) return;
+        tryStartAudio();
+      };
+      unlockEvents.forEach((eventName) => {
+        document.addEventListener(eventName, unlockAudio, { passive: true, once: true });
+      });
 
       // Toggle reproducir/pausar al clicar el control
       ctrl.addEventListener('click', (e) => {

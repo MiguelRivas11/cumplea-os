@@ -89,6 +89,14 @@ p {
   line-height: 1.6;
 }
 
+.audio-tip {
+  font-size: clamp(0.85rem, 2.6vw, 1rem);
+  color: rgba(255, 255, 255, 0.78);
+  max-width: 88%;
+  line-height: 1.35;
+  margin-top: -8px;
+}
+
 /* BOTONES */
 button {
   padding: 15px 40px;
