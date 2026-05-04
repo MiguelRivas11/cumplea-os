@@ -20,15 +20,24 @@
     </svg>
   </div>
 
+  <!-- PANTALLA SPLASH: BIENVENIDA -->
+  <div id="splash" class="splash activa">
+    <div class="splash-content">
+      <h1 class="splash-title">🎉 ¡FELIZ CUMPLEAÑOS! 🎂</h1>
+      <p class="splash-subtitle">Toca la pantalla para empezar</p>
+      <div class="splash-hint">↓ Toca aquí ↓</div>
+    </div>
+  </div>
+
   <!-- BENGALAS -->
   <div class="bengala left" id="b1"></div>
   <div class="bengala right" id="b2"></div>
 
   <!-- PANTALLA 1: INICIO -->
-  <div id="p1" class="pantalla activa">
+  <div id="p1" class="pantalla">
     <h1>🎉 ¡FELIZ CUMPLEAÑOS! 🎂</h1>
     <h2>Hoy es tu día especial</h2>
-    <p>Prepárate ponte tus audifonos para mejor experiencia \n da click en la bocina inferior derecha</p>
+    <p>Prepárate ponte tus audifonos para mejor experiencia</p>
     <p class="audio-tip"> toca la pantalla una vez. y dale ¡vamos!</p>
     <button onclick="siguiente(1)">🚀 ¡Vamos!</button>
     <div class="progreso">
@@ -92,7 +101,7 @@
     <div class="imagen-container">
       <img src="selfie.png" alt="Selfie de cumpleaños" onerror="this.src='https://via.placeholder.com/350x350?text=Selfie'; this.onerror=null;">
     </div>
-    <p style="margin-top: 30px; font-size: 1.2em;">¡A disfrutar y hacer recuerdos! 🌟</p>
+    <p style="margin-top: 30px; font-size: 1.2em;">¡A disfrutar y hacer recuerdos! 🌟 cierra la pestaña para apagar la musica</p>
     <button onclick="reiniciar()">🔄 Volver al inicio</button>
     <div class="progreso">
       <div class="progreso-barra" style="width: 100%;"></div>
@@ -219,20 +228,45 @@
 
     // INICIALIZACIÓN
     window.addEventListener('load', () => {
+      initSplash();
       crearChispas('b1');
       crearChispas('b2');
       crearGlobos();
-      initBackgroundAudio();
     });
 
     // SOPORTE PARA TECLA ENTER Y ESPACIO
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         const pantalla = document.querySelector('.pantalla.activa');
-        const boton = pantalla.querySelector('button');
+        const boton = pantalla?.querySelector('button');
         if (boton) boton.click();
       }
     });
+
+    // MANEJO DEL SPLASH
+    function initSplash() {
+      const splash = document.getElementById('splash');
+      const audio = document.getElementById('bgAudio');
+      if (!splash || !audio) return;
+
+      function startJourney() {
+        // Inicia la música
+        audio.volume = 0.35;
+        audio.play().catch(() => {});
+        
+        // Oculta splash y muestra p1
+        splash.classList.remove('activa');
+        document.getElementById('p1').classList.add('activa');
+        
+        // Inicializa controles de audio
+        initBackgroundAudio();
+      }
+
+      // Al tocar cualquier parte del splash
+      splash.addEventListener('pointerdown', startJourney, { once: true });
+      splash.addEventListener('touchstart', startJourney, { once: true });
+      splash.addEventListener('click', startJourney, { once: true });
+    }
 
     // AUDIO DE FONDO: intento de autoplay y control
     function initBackgroundAudio() {
